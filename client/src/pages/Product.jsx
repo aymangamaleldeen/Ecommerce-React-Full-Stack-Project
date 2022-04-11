@@ -121,6 +121,9 @@ const Product = () => {
   const params = useParams();
   const productId = params.id;
   const [product, setProduct] = useState({});
+  const [amount, setAmount] = useState(1);
+  const [color, setColor] = useState("");
+  const [size, setSize] = useState("");
 
   useEffect(() => {
     const getProduct = async () => {
@@ -134,7 +137,25 @@ const Product = () => {
     };
     getProduct();
   }, [productId]);
-console.log(product.color)
+
+  const addHandler = () => {
+    setAmount((prev) => (prev += 1));
+  };
+
+  const minusHandler = () => {
+    setAmount((prev) => {
+      if (prev > 1) {
+        return (prev -= 1);
+      } else {
+        return 1;
+      }
+    });
+  };
+
+const handleClick = ()=>{
+  
+}
+
   return (
     <Container>
       <Announcement />
@@ -150,24 +171,36 @@ console.log(product.color)
           <FilterContainer>
             <Filter>
               <FilterTitle>Color</FilterTitle>
-              {product.color? product.color.map(c=> <FilterColor color ={c} key={c} />) : ""}
+              {product.color
+                ? product.color.map((c) => (
+                    <FilterColor
+                      color={c}
+                      key={c}
+                      onClick={() => setColor(c)}
+                    />
+                  ))
+                : ""}
             </Filter>
             <Filter>
               <FilterTitle>Size</FilterTitle>
-              <FilterSize>
-                {product.size ? product.size.map(s =>  <FilterSizeOption key={s} > {s} </FilterSizeOption> ) : ""}
-              
-          
+              <FilterSize onChange={(e)=>setSize(e.target.value)}>
+                {product.size
+                  ? product.size.map((s) => (
+                      <FilterSizeOption key={s}>
+                        {s}
+                      </FilterSizeOption>
+                    ))
+                  : ""}
               </FilterSize>
             </Filter>
           </FilterContainer>
           <AddContainer>
             <AmountContainer>
-              <Remove style={{ cursor: "pointer" }} />
-              <Amount>1</Amount>
-              <Add style={{ cursor: "pointer" }} />
+              <Remove onClick={minusHandler} style={{ cursor: "pointer" }} />
+              <Amount>{amount}</Amount>
+              <Add onClick={addHandler} style={{ cursor: "pointer" }} />
             </AmountContainer>
-            <Button>ADD TO CART</Button>
+            <Button onClick={handleClick}>ADD TO CART</Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>
