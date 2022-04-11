@@ -150,16 +150,14 @@ console.log(product.color)
           <FilterContainer>
             <Filter>
               <FilterTitle>Color</FilterTitle>
-              <FilterColor color={product.color} />
+              {product.color? product.color.map(c=> <FilterColor color ={c} key={c} />) : ""}
             </Filter>
             <Filter>
               <FilterTitle>Size</FilterTitle>
               <FilterSize>
-                <FilterSizeOption>XS</FilterSizeOption>
-                <FilterSizeOption>S</FilterSizeOption>
-                <FilterSizeOption>M</FilterSizeOption>
-                <FilterSizeOption>L</FilterSizeOption>
-                <FilterSizeOption>XL</FilterSizeOption>
+                {product.size ? product.size.map(s =>  <FilterSizeOption key={s} > {s} </FilterSizeOption> ) : ""}
+              
+          
               </FilterSize>
             </Filter>
           </FilterContainer>
