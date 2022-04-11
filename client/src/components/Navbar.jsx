@@ -84,7 +84,6 @@ const logoHandler = () => {
     history.push("/cart");
   };
 
-  const cart = useSelector(state=>state.cart);
   const quantity = useSelector(state=>state.cart.quantity);
 
   return (

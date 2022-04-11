@@ -158,7 +158,9 @@ const quantity = useSelector(state=>state.quantity)
 const dispatch = useDispatch();
 
 const handleClick = ()=>{
-dispatch(addProduct({product,quantity:amount}))
+dispatch(
+  addProduct({ ...product, quantity: amount, price: product.price * amount,color,size })
+);
 }
 
   return (
