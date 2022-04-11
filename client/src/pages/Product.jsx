@@ -159,7 +159,7 @@ const dispatch = useDispatch();
 
 const handleClick = ()=>{
 dispatch(
-  addProduct({ ...product, quantity: amount, price: product.price * amount,color,size })
+  addProduct({ ...product, quantity: amount,color,size })
 );
 }
 

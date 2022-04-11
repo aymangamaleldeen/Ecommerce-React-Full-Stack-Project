@@ -156,6 +156,7 @@ const Button = styled.button`
 
 const Cart = () => {
   const products = useSelector(state=>state.cart.products)
+  const total = useSelector(state=>state.cart.total)
   console.log(products)
 
   return (
@@ -174,38 +175,40 @@ const Cart = () => {
         </Top>
         <Bottom>
           <Info>
-           {products.map(p =>  <Product>
-              <ProductDetail>
-                <Image src={p.img}/>
-                <Details>
+            {products.map((p) => (
+              <Product>
+                <ProductDetail>
+                  <Image src={p.img} />
+                  <Details>
                     <ProductName>
                       <b>Product:</b> {p.title}
                     </ProductName>
-                  <ProductId>
-                    <b>ID:</b> {p._id}
-                  </ProductId>
-                  <ProductColor color={p.color} />
-                  <ProductSize>
-                    <b>Size:</b> 37.5
-                  </ProductSize>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <Add />
-                  <ProductAmount>2</ProductAmount>
-                  <Remove />
-                </ProductAmountContainer>
-                <ProductPrice>{p.price}</ProductPrice>
-              </PriceDetail>
-            </Product>)}
-            <Hr />      
+                    <ProductId>
+                      <b>ID:</b> {p._id}
+                    </ProductId>
+                    <ProductColor color={p.color} />
+                    <ProductSize>
+                      <b>Size:</b> {p.size}
+                    </ProductSize>
+                  </Details>
+                </ProductDetail>
+                <PriceDetail>
+                  <ProductAmountContainer>
+                    <Add />
+                    <ProductAmount>{p.quantity}</ProductAmount>
+                    <Remove />
+                  </ProductAmountContainer>
+                  <ProductPrice>{`${p.quantity * p.price} $`}</ProductPrice>
+                </PriceDetail>
+              </Product>
+            ))}
+            <Hr />
           </Info>
           <Summary>
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
             <SummaryItem>
               <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
+              <SummaryItemPrice>{`$ ${total}`}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
               <SummaryItemText>Estimated Shipping</SummaryItemText>
@@ -217,7 +220,7 @@ const Cart = () => {
             </SummaryItem>
             <SummaryItem type="total">
               <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
+              <SummaryItemPrice>{`$ ${total}`}</SummaryItemPrice>
             </SummaryItem>
             <Button>CHECKOUT NOW</Button>
           </Summary>
