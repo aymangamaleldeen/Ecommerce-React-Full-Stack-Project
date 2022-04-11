@@ -4,6 +4,7 @@ import React from "react";
 import styled from "styled-components";
 import mobile from "../Responsive";
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   height: 60px;
@@ -82,6 +83,10 @@ const logoHandler = () => {
   const cartHandler = () => {
     history.push("/cart");
   };
+
+  const cart = useSelector(state=>state.cart);
+  const quantity = useSelector(state=>state.cart.quantity);
+
   return (
     <Container>
       <Wrapper>
@@ -99,7 +104,7 @@ const logoHandler = () => {
           <MenuItem onClick={registerHandler}>REGISTER</MenuItem>
           <MenuItem onClick={loginHandler}>SIGN IN</MenuItem>
           <MenuItem>
-            <Badge badgeContent={4} color="primary">
+            <Badge badgeContent={quantity} color="primary">
               <ShoppingCartOutlined onClick={cartHandler} />
             </Badge>
           </MenuItem>
