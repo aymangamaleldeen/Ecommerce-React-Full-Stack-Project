@@ -7,6 +7,8 @@ import NewsLetter from "../components/NewsLetter";
 import mobile from "../Responsive";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addProduct } from "../redux/cartRedux";
 
 const Container = styled.div``;
 
@@ -152,8 +154,11 @@ const Product = () => {
     });
   };
 
+const quantity = useSelector(state=>state.quantity)  
+const dispatch = useDispatch();
+
 const handleClick = ()=>{
-  
+dispatch(addProduct({product,quantity:amount}))
 }
 
   return (
