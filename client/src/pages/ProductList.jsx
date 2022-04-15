@@ -66,7 +66,8 @@ const ProductList = () => {
   const sortHandler = (event) => {
     setSort(event.target.value);
   };
-  console.log(filters);
+
+  
   return (
     <Container>
       <Announcement />
@@ -76,7 +77,9 @@ const ProductList = () => {
         <Filter>
           <FilterText>Filter Products:</FilterText>
           <Select onChange={colorHandler}>
-            <Option disabled selected>Color</Option>
+            <Option disabled defaultValue>
+              Color
+            </Option>
             <Option>white</Option>
             <Option>black</Option>
             <Option>red</Option>

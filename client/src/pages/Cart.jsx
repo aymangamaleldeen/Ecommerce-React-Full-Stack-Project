@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react'
 import { Add, Remove } from "@material-ui/icons";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
@@ -5,8 +6,10 @@ import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import mobile from "../Responsive";
+import SrripeCheckout from "react-stripe-checkout";
+import { useHistory } from 'react-router-dom';
 
-
+const KEY = process.env.REACT_APP_STRIPE;
 const Container = styled.div``;
 
 const Wrapper = styled.div`
@@ -155,9 +158,30 @@ const Button = styled.button`
 `;
 
 const Cart = () => {
-  const products = useSelector(state=>state.cart.products)
-  const total = useSelector(state=>state.cart.total)
-  console.log(products)
+  const products = useSelector((state) => state.cart.products);
+  const total = useSelector((state) => state.cart.totalPrice);
+
+  const history = useHistory();
+  const [stripeToken, setStripeToken] = useState(null);
+  const onToken = (token) => {
+    setStripeToken(token);
+  };
+
+useEffect(()=>{
+const makeRequest = async()=>{
+  try{
+    const res = await fetch("http://localhost:5000/api/checkout/payment",{
+      method:"POST",
+      tokenId: stripeToken.id,
+      amount:total*100,
+    })
+    const data = await res.json();
+    history.push("/success",{data:data})
+
+  }catch {}
+}
+stripeToken && total>=1 && makeRequest();
+},[stripeToken,total,history])
 
   return (
     <Container>
@@ -176,7 +200,7 @@ const Cart = () => {
         <Bottom>
           <Info>
             {products.map((p) => (
-              <Product>
+              <Product key={p._id}>
                 <ProductDetail>
                   <Image src={p.img} />
                   <Details>
@@ -194,11 +218,17 @@ const Cart = () => {
                 </ProductDetail>
                 <PriceDetail>
                   <ProductAmountContainer>
-                    <Add />
-                    <ProductAmount>{p.quantity}</ProductAmount>
-                    <Remove />
+                    <Add
+                      // onclick={addHandler}
+                      style={{ cursor: "pointer" }}
+                    />
+                    <ProductAmount>{p.amount}</ProductAmount>
+                    <Remove
+                      // onclick={removeHandler}
+                      style={{ cursor: "pointer" }}
+                    />
                   </ProductAmountContainer>
-                  <ProductPrice>{`${p.quantity * p.price} $`}</ProductPrice>
+                  <ProductPrice>{`${p.amount * p.price} $`}</ProductPrice>
                 </PriceDetail>
               </Product>
             ))}
@@ -222,7 +252,18 @@ const Cart = () => {
               <SummaryItemText>Total</SummaryItemText>
               <SummaryItemPrice>{`$ ${total}`}</SummaryItemPrice>
             </SummaryItem>
-            <Button>CHECKOUT NOW</Button>
+            <SrripeCheckout
+              name="HMN Shop"
+              image="https://avatars.githubusercontent.com/u/1486366?v=4"
+              billingAddress
+              shippingAddress
+              description={`Your Total is $${total}`}
+              amount={total * 100}
+              token={onToken}
+              stripeKey={KEY}
+            >
+              <Button>CHECKOUT NOW</Button>
+            </SrripeCheckout>
           </Summary>
         </Bottom>
       </Wrapper>
