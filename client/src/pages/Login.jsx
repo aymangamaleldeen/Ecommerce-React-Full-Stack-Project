@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import mobile from "../Responsive";
-
-
+import { useForm } from "react-hook-form";
+import { login } from "../redux/apiCalls";
+import { useDispatch, useSelector } from "react-redux";
 
 const Container = styled.div`
   width: 100vw;
@@ -50,6 +51,11 @@ const Button = styled.button`
   color: white;
   cursor: pointer;
   margin-bottom: 10px;
+
+  &:disabled {
+    color: green;
+    cursor: not-allowed;
+  }
 `;
 
 const Link = styled.a`
@@ -59,15 +65,31 @@ const Link = styled.a`
   cursor: pointer;
 `;
 
+const Error = styled.span`
+  color: red;
+`;
+
 const Login = () => {
+  const { register, handleSubmit } = useForm();
+  const dispatch = useDispatch();
+  const { isFetching, error } = useSelector((state) => state.user);
+
+  const formSubmitHandler = (data) => {
+    login(dispatch, data);
+  };
   return (
     <Container>
       <Wrapper>
         <Title>SIGN IN</Title>
-        <Form>
-          <Input placeholder="username" />
-          <Input placeholder="password" />
-          <Button>LOGIN</Button>
+        <Form onSubmit={handleSubmit(formSubmitHandler)}>
+          <Input placeholder="username" type="text" {...register("username")} />
+          <Input
+            placeholder="password"
+            type="password"
+            {...register("password")}
+          />
+          <Button disabled={isFetching}>LOGIN</Button>
+          {error && <Error> Something Went Wrong</Error>}
           <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
           <Link>CREATE A NEW ACCOUNT</Link>
         </Form>
